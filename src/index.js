@@ -544,7 +544,7 @@ class PhoneInput extends React.Component {
       if (value === prefix+countryCode.slice(0, countryCode.length-1)) return;
     }
 
-    if (value === prefix) {
+    if (value === prefix || value === '') {
       // we should handle change when we delete the last digit
       if (onChange) onChange('', this.getCountryData(), e, '');
       return this.setState({ formattedNumber: '' });
