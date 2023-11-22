@@ -396,7 +396,7 @@ class PhoneInput extends React.Component {
     container.scrollTop = 0;
   }
 
-  formatNumber = (text, country, originalCountry) => {
+  formatNumber = (text, country, originalCountry, allowPrefixPrepend) => {
     if (!country) return { formattedNumber: text };
 
     let { format } = country;
@@ -410,24 +410,26 @@ class PhoneInput extends React.Component {
       pattern = pattern.join(' ');
     } else {
 
-      // Add country code to the beginning of the number when not present
-      const rawNumber = text.toString();
-      // Try to parse the number as an international number first
-      let phoneNumber = parsePhoneNumberFromString(rawNumber)
-      if (!phoneNumber || !phoneNumber.isValid()) {
-          // If it's not a valid international number, try parsing it as a national number
-          phoneNumber = parsePhoneNumberFromString(rawNumber, (originalCountry || country).iso2.toUpperCase())
-      }
-      
-      if (phoneNumber && phoneNumber.isValid()) {
-        let formattedNumber = phoneNumber.formatNational();
-        let digitsOnly = formattedNumber.replace(/\D/g, ''); // remove all non-digit characters
+      if (allowPrefixPrepend) {
+        // Add country code to the beginning of the number when not present
+        const rawNumber = text.toString();
+        // Try to parse the number as an international number first
+        let phoneNumber = parsePhoneNumberFromString(rawNumber)
+        if (!phoneNumber || !phoneNumber.isValid()) {
+            // If it's not a valid international number, try parsing it as a national number
+            phoneNumber = parsePhoneNumberFromString(rawNumber, (originalCountry || country).iso2.toUpperCase())
+        }
+        
+        if (phoneNumber && phoneNumber.isValid()) {
+          let formattedNumber = phoneNumber.formatNational();
+          let digitsOnly = formattedNumber.replace(/\D/g, ''); // remove all non-digit characters
 
-        if (!digitsOnly.startsWith(phoneNumber.countryCallingCode)) {
-          text = phoneNumber.countryCallingCode + digitsOnly;
-          preserveCountry = true;
-          country = originalCountry || country;
-          format = country.format;
+          if (!digitsOnly.startsWith(phoneNumber.countryCallingCode)) {
+            text = phoneNumber.countryCallingCode + digitsOnly;
+            preserveCountry = true;
+            country = originalCountry || country;
+            format = country.format;
+          }
         }
       }
 
@@ -591,7 +593,9 @@ class PhoneInput extends React.Component {
         }
         freezeSelection = false;
       }
-      const { formattedNumber: newFormattedNumber, preserveCountry } = this.formatNumber(inputNumber, newSelectedCountry, selectedCountry);
+
+      const allowPrefixPrepend = !e.nativeEvent.data || !/^[0-9]$/.test(e.nativeEvent.data);
+      const { formattedNumber: newFormattedNumber, preserveCountry } = this.formatNumber(inputNumber, newSelectedCountry, selectedCountry, allowPrefixPrepend);
       formattedNumber = newFormattedNumber;
       newSelectedCountry = newSelectedCountry.dialCode && !preserveCountry ? newSelectedCountry : selectedCountry;
     }
