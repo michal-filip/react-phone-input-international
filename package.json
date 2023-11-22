@@ -1,6 +1,6 @@
 {
-  "name": "react-phone-input-2",
-  "version": "2.15.1",
+  "name": "@mnxt/react-phone-input-2",
+  "version": "2.16.3",
   "description": "A react component to format phone numbers",
   "main": "lib/lib.js",
   "typings": "index.d.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bl00mber/react-phone-input-2.git"
+    "url": "git+https://github.com/michal-filip/react-phone-input-international.git"
   },
   "keywords": [
     "react",
@@ -40,15 +40,13 @@
     "README.md",
     "index.d.ts"
   ],
-  "author": "Nick Reiley <bloomber111@gmail.com> (https://github.com/bl00mber)",
-  "contributors": [
-    "Raza Gill <raza.gill@outlook.com> (https://github.com/razagill)"
-  ],
+  "author": "Michal Filip <michal.filip@monster.com> (https://github.com/michal-filip)",
+  "contributors": [],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bl00mber/react-phone-input-2/issues"
+    "url": "https://github.com/michal-filip/react-phone-input-international/issues"
   },
-  "homepage": "https://github.com/bl00mber/react-phone-input-2",
+  "homepage": "https://github.com/michal-filip/react-phone-input-international",
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "<rootDir>/test/__mocks__/fileMock.js",
