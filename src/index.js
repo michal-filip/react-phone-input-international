@@ -594,7 +594,7 @@ class PhoneInput extends React.Component {
         freezeSelection = false;
       }
 
-      const allowPrefixPrepend = !e.nativeEvent.data || !/^[0-9]$/.test(e.nativeEvent.data);
+      const allowPrefixPrepend = !value.includes('+');
       const { formattedNumber: newFormattedNumber, preserveCountry } = this.formatNumber(inputNumber, newSelectedCountry, selectedCountry, allowPrefixPrepend);
       formattedNumber = newFormattedNumber;
       newSelectedCountry = newSelectedCountry.dialCode && !preserveCountry ? newSelectedCountry : selectedCountry;
@@ -729,6 +729,8 @@ class PhoneInput extends React.Component {
     // ie hack
     if (e.preventDefault) { e.preventDefault(); }
     else { e.returnValue = false; }
+
+    e.stopPropagation();
 
     const moveHighlight = (direction) => {
       this.setState({
