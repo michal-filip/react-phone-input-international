@@ -712,7 +712,7 @@ class PhoneInput extends React.Component {
     const { keys } = this.props;
     const { target: { className } } = e;
 
-    if (className.includes('selected-flag') && e.which === keys.ENTER && !this.state.showDropdown) return this.handleFlagDropdownClick(e);
+    if (className.includes('selected-flag') && (e.which === keys.ENTER || e.which === keys.SPACE) && !this.state.showDropdown) return this.handleFlagDropdownClick(e);
     if (className.includes('form-control') && (e.which === keys.ENTER || e.which === keys.ESC)) return e.target.blur();
 
     if (!this.state.showDropdown || this.props.disabled) return;
@@ -736,7 +736,9 @@ class PhoneInput extends React.Component {
       this.setState({
         highlightCountryIndex: this.getHighlightCountryIndex(direction)
       }, () => {
-        this.scrollTo(this.getElement(this.state.highlightCountryIndex), true);
+        const element = this.getElement(this.state.highlightCountryIndex);
+        this.scrollTo(element, true);
+        element.focus();
       });
     }
 
