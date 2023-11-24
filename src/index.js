@@ -703,7 +703,11 @@ class PhoneInput extends React.Component {
     const probableCandidate = this.getProbableCandidate(this.state.queryString) || this.state.onlyCountries[0];
     const probableCandidateIndex = this.state.onlyCountries.findIndex(o => o == probableCandidate) + this.state.preferredCountries.length;
 
-    this.scrollTo(this.getElement(probableCandidateIndex), true);
+    const element = this.getElement(probableCandidateIndex);
+    this.scrollTo(element, true);
+    if (element) {
+      element.focus();
+    }
 
     this.setState({highlightCountryIndex: probableCandidateIndex});
   }
