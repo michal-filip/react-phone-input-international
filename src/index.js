@@ -259,8 +259,8 @@ class PhoneInput extends React.Component {
     if (!queryString || queryString.length === 0) {
       return null;
     }
-    // don't include the preferred countries in search
-    const probableCountries = this.state.onlyCountries.filter((country) => {
+    // include the preferred countries in search
+    const probableCountries = this.concatPreferredCountries(this.state.preferredCountries, this.state.onlyCountries).filter((country) => {
       return startsWith((country.localName || country.name).toLowerCase(), queryString.toLowerCase());
     }, this);
     return probableCountries[0];
@@ -338,7 +338,7 @@ class PhoneInput extends React.Component {
       formattedNumber = this.formatNumber(inputNumber, selectedCountry).formattedNumber;
       this.setState({ formattedNumber });
     } else {
-      if (this.props.disableCountryGuess) {newSelectedCountry = selectedCountry;}
+      if (this.props.disableCountryGuess || inputNumber === this.state.formattedNumber.replace(/\D/g, '')) {newSelectedCountry = selectedCountry;}
       else {
         newSelectedCountry = this.guessSelectedCountry(inputNumber.substring(0, 6), country, onlyCountries, hiddenAreaCodes) || selectedCountry;
       }
@@ -591,8 +591,8 @@ class PhoneInput extends React.Component {
         else {
           newSelectedCountry = this.guessSelectedCountry(inputNumber.substring(0, 6), country, onlyCountries, hiddenAreaCodes) || selectedCountry;
         }
-        freezeSelection = false;
       }
+      freezeSelection = false;
 
       const allowPrefixPrepend = !value.includes('+');
       const { formattedNumber: newFormattedNumber, preserveCountry } = this.formatNumber(inputNumber, newSelectedCountry, selectedCountry, allowPrefixPrepend);
@@ -700,8 +700,8 @@ class PhoneInput extends React.Component {
   }
 
   searchCountry = () => {
-    const probableCandidate = this.getProbableCandidate(this.state.queryString) || this.state.onlyCountries[0];
-    const probableCandidateIndex = this.state.onlyCountries.findIndex(o => o == probableCandidate) + this.state.preferredCountries.length;
+    const probableCandidate = this.getProbableCandidate(this.state.queryString) || this.state.preferredCountries[0] || this.state.onlyCountries[0];
+    const probableCandidateIndex = this.concatPreferredCountries(this.state.preferredCountries, this.state.onlyCountries).findIndex(o => o == probableCandidate);
 
     const element = this.getElement(probableCandidateIndex);
     this.scrollTo(element, true);
@@ -757,7 +757,7 @@ class PhoneInput extends React.Component {
         if (this.props.enableSearch) {
           this.handleFlagItemClick(this.getSearchFilteredCountries()[this.state.highlightCountryIndex] || this.getSearchFilteredCountries()[0], e);
         } else {
-          this.handleFlagItemClick([...this.state.preferredCountries, ...this.state.onlyCountries][this.state.highlightCountryIndex], e);
+          this.handleFlagItemClick(this.concatPreferredCountries(this.state.preferredCountries, this.state.onlyCountries)[this.state.highlightCountryIndex], e);
         }
         break;
       case keys.ESC:
@@ -861,8 +861,6 @@ class PhoneInput extends React.Component {
       const highlight = highlightCountryIndex === index;
       const itemClasses = classNames({
         country: true,
-        preferred: country.iso2 === 'us' || country.iso2 === 'gb',
-        active: country.iso2 === 'us',
         highlight
       });
 
