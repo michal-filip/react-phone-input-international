@@ -421,8 +421,7 @@ class PhoneInput extends React.Component {
         }
         
         if (phoneNumber && phoneNumber.isValid()) {
-          let formattedNumber = phoneNumber.formatNational();
-          let digitsOnly = formattedNumber.replace(/\D/g, ''); // remove all non-digit characters
+          let digitsOnly = rawNumber.replace(/\D/g, ''); // remove all non-digit characters
 
           if (!digitsOnly.startsWith(phoneNumber.countryCallingCode)) {
             text = phoneNumber.countryCallingCode + digitsOnly;
